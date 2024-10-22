@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 #region UI Elements
     [SerializeField] private Transform crosshair;
     [SerializeField] private Transform target;
+    [SerializeField] private Camera mainCam;
 #endregion 
 
 #region Singleton
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
     private InputAction mouseAction;
     private InputAction deltaAction;
     private InputAction selectAction;
+    private InputAction mouseZoomAction;
 #endregion
 
 #region Events
@@ -54,19 +56,23 @@ public class UIManager : MonoBehaviour
         mouseAction = actions.mouse.position;
         deltaAction = actions.mouse.delta;
         selectAction = actions.mouse.select;
+        mouseZoomAction = actions.camera.zoom;
 
         Cursor.visible = false;
         target.gameObject.SetActive(false);
+        mouseZoomAction.performed += CameraZoom;
     }
 
     void OnEnable()
     {
         actions.mouse.Enable();
+        actions.camera.Enable();
     }
 
     void OnDisable()
     {
         actions.mouse.Disable();
+        actions.camera.Disable();
     }
 #endregion Init
 
@@ -79,7 +85,21 @@ public class UIManager : MonoBehaviour
 
     private void MoveCrosshair() 
     {
+        LayerMask mask = LayerMask.GetMask("Walls");
         Vector2 mousePos = mouseAction.ReadValue<Vector2>();
+        //Debug.Log("Mouse Position = " + mousePos);
+        mousePos.x = Mathf.Clamp(mousePos.x, 0, Screen.width);
+        mousePos.y = Mathf.Clamp(mousePos.y, 0, Screen.height);
+        
+
+        Ray aim = mainCam.ScreenPointToRay(mousePos);
+        RaycastHit hit;
+
+        if (Physics.Raycast(aim, out hit, 100, mask))
+        {
+            //Debug.Log("aim x = " + hit.point.x + " aim y = " + hit.point.y);
+            crosshair.transform.position = hit.point;
+        }
 
         // FIXME: Move the crosshair position to the mouse position (in world coordinates)
         // crosshair.position = ...;
@@ -94,6 +114,15 @@ public class UIManager : MonoBehaviour
             target.position = crosshair.position;     
             TargetSelected?.Invoke(target.position);       
         }
+    }
+
+    private void CameraZoom(InputAction.CallbackContext context)
+    {
+        float zoomVal = mouseZoomAction.ReadValue<float>();
+
+        Debug.Log(zoomVal);
+        
+        mainCam.fieldOfView -= zoomVal/12; 
     }
 
 #endregion Update
