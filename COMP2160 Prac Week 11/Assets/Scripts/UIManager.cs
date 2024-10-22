@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform crosshair;
     [SerializeField] private Transform target;
     [SerializeField] private Camera mainCam;
+    private Plane plane;
 #endregion 
 
 #region Singleton
@@ -76,6 +77,11 @@ public class UIManager : MonoBehaviour
     }
 #endregion Init
 
+    void Start()
+    {
+        plane = new Plane(Vector3.up, transform.position);
+    }
+
 #region Update
     void Update()
     {
@@ -85,7 +91,6 @@ public class UIManager : MonoBehaviour
 
     private void MoveCrosshair() 
     {
-        LayerMask mask = LayerMask.GetMask("Walls");
         Vector2 mousePos = mouseAction.ReadValue<Vector2>();
         //Debug.Log("Mouse Position = " + mousePos);
         mousePos.x = Mathf.Clamp(mousePos.x, 0, Screen.width);
@@ -93,12 +98,18 @@ public class UIManager : MonoBehaviour
         
 
         Ray aim = mainCam.ScreenPointToRay(mousePos);
-        RaycastHit hit;
+        float enter = 0.0f;
+        Debug.Log(enter);
 
-        if (Physics.Raycast(aim, out hit, 100, mask))
+        if (plane.Raycast(aim, out enter))
         {
-            //Debug.Log("aim x = " + hit.point.x + " aim y = " + hit.point.y);
-            crosshair.transform.position = hit.point;
+            
+            Vector3 hitPoint = aim.GetPoint(enter); 
+            //Debug.Log("aim x = " + hitPoint.x + " aim y = " + hitPoint.y);
+            crosshair.transform.position = hitPoint;
+            hitPoint = crosshair.transform.localPosition;
+            hitPoint.z = 0;
+            crosshair.transform.localPosition = hitPoint;
         }
 
         // FIXME: Move the crosshair position to the mouse position (in world coordinates)

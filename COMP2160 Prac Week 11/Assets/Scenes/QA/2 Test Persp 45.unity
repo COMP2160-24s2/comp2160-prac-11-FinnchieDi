@@ -150,6 +150,11 @@ PrefabInstance:
       propertyPath: mainCam
       value: 
       objectReference: {fileID: 2408856355099670849}
+    - target: {fileID: 5450362575394769019, guid: b96044efa2ae54750ad24e39e1352865,
+        type: 3}
+      propertyPath: planeDist
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8399291161501472776, guid: b96044efa2ae54750ad24e39e1352865,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -243,7 +248,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Test Orthographic Camera Flat: \nMove the cross hair to different parts
+  m_text: "Test Perspective Camera Flat: \nMove the cross hair to different parts
     of the screen and click.\n1. Check crosshair is always visible\n2. Check crosshair
     moves with mouse cursor.\n3. Check crosshair is displayed under the marble. \n4.
     Check visible target marker is dropped when mouse is clicked."
@@ -716,7 +721,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -812,13 +817,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4601777957755373507}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 5.2270284, z: 0}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 10.000001, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
