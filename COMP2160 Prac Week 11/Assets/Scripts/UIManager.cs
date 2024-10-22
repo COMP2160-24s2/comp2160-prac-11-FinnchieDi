@@ -15,6 +15,7 @@ using UnityEngine.InputSystem;
 [DefaultExecutionOrder(-100)]
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private bool useDeltaMovement = true;
 #region UI Elements
     [SerializeField] private Transform crosshair;
     [SerializeField] private Transform target;
@@ -91,29 +92,50 @@ public class UIManager : MonoBehaviour
 
     private void MoveCrosshair() 
     {
-        Vector2 mousePos = mouseAction.ReadValue<Vector2>();
-        //Debug.Log("Mouse Position = " + mousePos);
-        mousePos.x = Mathf.Clamp(mousePos.x, 0, Screen.width);
-        mousePos.y = Mathf.Clamp(mousePos.y, 0, Screen.height);
+        if (useDeltaMovement)
+        {
+            private Vector3 crosshairWorldPos = crosshair.transform.position;
+
+            Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+
+            Vector3 screenPos = mainCam.WorldtoScreenPoint(crosshairWorldPos);
+            screenPos += (Vector3)mouseDelta;
+
+            Ray ray = mainCam.ScreenPointToRay(screenPos);
+            if (plane.Raycast(ray, out enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                crosshairWorldPos = hitPoint;
+
+                crosshair.transform.position = crosshairWorldPos;
+                crosshair.transform.localPosition = new Vector3(crosshair.transform.localPosition.x, crosshair.transform.localPosition.y, 0);
+            }
+        }
+        else
+        {
+            Vector2 mousePos = mouseAction.ReadValue<Vector2>();
+            //Debug.Log("Mouse Position = " + mousePos);
+            mousePos.x = Mathf.Clamp(mousePos.x, 0, Screen.width);
+            mousePos.y = Mathf.Clamp(mousePos.y, 0, Screen.height);
         
 
-        Ray aim = mainCam.ScreenPointToRay(mousePos);
-        float enter = 0.0f;
-        Debug.Log(enter);
+            Ray aim = mainCam.ScreenPointToRay(mousePos);
+            float enter = 0.0f;
+        
 
-        if (plane.Raycast(aim, out enter))
-        {
+            if (plane.Raycast(aim, out enter))
+            {
             
-            Vector3 hitPoint = aim.GetPoint(enter); 
-            //Debug.Log("aim x = " + hitPoint.x + " aim y = " + hitPoint.y);
-            crosshair.transform.position = hitPoint;
-            hitPoint = crosshair.transform.localPosition;
-            hitPoint.z = 0;
-            crosshair.transform.localPosition = hitPoint;
+                Vector3 hitPoint = aim.GetPoint(enter);
+                Debug.Log(enter); 
+                //Debug.Log("aim x = " + hitPoint.x + " aim y = " + hitPoint.y);
+                crosshair.transform.position = hitPoint;
+                hitPoint = crosshair.transform.localPosition;
+                hitPoint.z = 0;
+                crosshair.transform.localPosition = hitPoint;
+            }
         }
 
-        // FIXME: Move the crosshair position to the mouse position (in world coordinates)
-        // crosshair.position = ...;
     }
 
     private void SelectTarget()

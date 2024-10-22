@@ -15,7 +15,7 @@ public class FollowMarble : MonoBehaviour
     {
         Gizmos.color = Color.magenta;
 
-        Gizmos.DrawWireSphere(gameObject.transform.position, 1f);
+        Gizmos.DrawWireSphere(gameObject.transform.position, 0.5f);
     }
 
     // Update is called once per frame
