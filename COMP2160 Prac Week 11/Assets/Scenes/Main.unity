@@ -165,6 +165,16 @@ PrefabInstance:
       propertyPath: mainCam
       value: 
       objectReference: {fileID: 2408856355099670849}
+    - target: {fileID: 5450362575394769019, guid: b96044efa2ae54750ad24e39e1352865,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450362575394769019, guid: b96044efa2ae54750ad24e39e1352865,
+        type: 3}
+      propertyPath: useDeltaMovement
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7485987256551808895, guid: b96044efa2ae54750ad24e39e1352865,
         type: 3}
       propertyPath: m_LocalPosition.z
